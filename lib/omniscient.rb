@@ -1,3 +1,5 @@
+$:.unshift File.expand_path('../omniscient/', __FILE__)
+
 module Omniscient
-  # Your code goes here...
+
 end

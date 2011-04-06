@@ -2,14 +2,14 @@ module Omniscient
   
   module Command
 
-    class Clone
-      
-      def initialize
-        
+    class Clone < Omniscient::Command::Run
+
+      def run
+        puts 'Working.'
       end
       
-      def self.start
-        'start'
+      def help
+        puts 'Help is missing.'
       end
       
     end

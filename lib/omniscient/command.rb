@@ -3,10 +3,13 @@ module Omniscient
   module Command
 
     class Run
-      def initialize argv
+      def initialize argv = ''
+        @argv = argv
         
-        if Shell::Parser.is_option "help", argv then
-          help
+        @configurations = Omniscient::Configuration.new
+        
+        if Shell::Parser.is_option "help", argv
+          help if self.respond_to?('help')
           exit
         end
 
@@ -16,6 +19,10 @@ module Omniscient
           help
         end
         
+      end
+      
+      def request_configuration
+        @configurations.configuration @configurations.questions(:alias_name => @alias_name)
       end
       
     end

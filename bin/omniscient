@@ -16,6 +16,5 @@ unless command.empty? then
     require command_file
     command = command.capitalize
     command_obj = Omniscient::Command.const_get(command).new(ARGV)
-    
   end
 end

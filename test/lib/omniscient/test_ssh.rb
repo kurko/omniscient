@@ -9,25 +9,24 @@ class SshTest < Test::Unit::TestCase
   end
   
   def setup
-    @ssh = Omniscient::Ssh.new :hostname => 'localhost', :user => 'user'
+    @ssh = Omniscient::Ssh.new :address => 'user@localhost'
   end
 
   def test_initialization
-    assert_equal 'localhost', @ssh.hostname
-    assert_equal 'user', @ssh.user
+    assert_equal 'user@localhost', @ssh.address
   end
    
   def test_address
-    assert_equal 'user@localhost', @ssh.address()
+    assert_equal 'user@localhost', @ssh.get_address()
   end
 
   def test_address_without_user
-    @ssh = Omniscient::Ssh.new :hostname => 'localhost'
-    assert_equal 'localhost', @ssh.address()
+    @ssh = Omniscient::Ssh.new :address => 'localhost'
+    assert_equal 'localhost', @ssh.get_address()
   end
 
   def test_address_with_port
-    @ssh = Omniscient::Ssh.new :hostname => 'localhost', :user => 'user', :port => '22'
+    @ssh = Omniscient::Ssh.new :address => 'user@localhost', :port => '22'
     # TODO
   end
 

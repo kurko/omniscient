@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Alexandre de Oliveira"]
   s.email       = ["chavedomundo@gmail.com"]
-  s.homepage    = ""
+  s.homepage    = "http://github.com/kurko/omniscient"
   s.summary     = %q{Manage DBs from your local machine.}
   s.description = %q{Clone DBs from one machine to another.}
 

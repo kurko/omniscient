@@ -92,6 +92,23 @@ module Shell
       @options
     end # get_options
     
+    def self.get_option_value option, argv = Array.new
+      next_item, option_value = false
+      argv.each { |e|
+        if next_item
+          option_value = e
+          break
+        end
+        e_length = e.length
+        if e[0,2] == "--" 
+          next_item = true if e[2,e_length] == option
+        elsif e[0,1] == "-"
+          next_item = true if e[1,e_length] == option
+        end
+      }
+      option_value || ''
+    end
+    
     # get arguments. arguments are anything written besides the command and options.
     # in 'push today --list', 'today' is the argument
     def self.get_arguments argv

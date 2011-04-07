@@ -29,4 +29,9 @@ class MySQLTest < Test::Unit::TestCase
     assert_equal %Q{mysqldump -u root -ppw omniscient mytable --single-transaction > .omni_dump.sql}, @mysql.dump()
   end
 
+  def test_import
+    assert_equal %Q{mysql -u root -ppw omniscient < }+Omniscient::DUMP_LOCAL_PATH, @mysql.import()
+  end
+
+
 end

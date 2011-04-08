@@ -8,14 +8,18 @@ don't want to dump and clone data manually all the time.
 Getting Started
 ===============
 
-In your console, type the following, where aliasname is a name you choose
+In your console:
+
+$ gem install omniscient
+
+Then, type the following, where _aliasname_ is a name you choose
 (i.e. home_computer, work etc):
 
 $ omniscient clone aliasname
 
-A setup will begin. The data will be save to ~/.omni_config.yml
+A setup will begin. The configuration will be saved to ~/.omni_config.yml.
 
-Now that Omniscient knows where to connect, run the following command again
+Now that Omniscient knows where to connect, run the following command again:
 
 $ omniscient clone aliasname
 

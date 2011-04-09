@@ -15,14 +15,18 @@ class SshTest < Test::Unit::TestCase
   def test_initialization
     assert_equal 'user@localhost', @ssh.address
   end
+  
+  def test_invalid_initialization
+    @ssh = Omniscient::Ssh.new :address => 'user@localhost'
+  end
    
   def test_address
-    assert_equal 'user@localhost', @ssh.get_address()
+    assert_equal 'user@localhost', @ssh.get_address
   end
 
   def test_address_without_user
     @ssh = Omniscient::Ssh.new :address => 'localhost'
-    assert_equal 'localhost', @ssh.get_address()
+    assert_equal 'localhost', @ssh.get_address
   end
 
   def test_address_with_port

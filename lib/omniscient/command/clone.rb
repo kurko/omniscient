@@ -1,14 +1,13 @@
 require 'yaml'
 
 module Omniscient
-  
   module Command
-
     class Clone < Omniscient::Command::Run
 
       def run
- 
         @alias_name = Shell::Parser.get_arguments(@argv).first || ""
+        
+        (help; exit) if @alias_name.empty?
         
         has_conf = load_configuration_by_alias(@alias_name)
         unless has_conf
@@ -39,7 +38,6 @@ module Omniscient
         command_to_issue = "#{@mysql.import}"
         puts "Running => #{command_to_issue}"
         exit unless system command_to_issue
-        
       end
    
       def load_configuration_by_alias alias_name
@@ -54,11 +52,16 @@ module Omniscient
         else
           false
         end
-
       end
         
       def help
-        puts 'Help is missing.'
+        print "Usage:\n"
+        print "\s\somniscient push ALIAS_NAME [options]"
+        print "\n\n"
+        print "Options:"
+        print "\n"
+        print "\s\s-d\tSelect a different database"
+        print "\n"
       end
       
     end

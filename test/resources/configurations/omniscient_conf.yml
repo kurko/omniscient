@@ -1,0 +1,17 @@
+--- 
+foo: 
+  ssh: 
+    address: foo@192.168.0.100
+    port: false
+  mysql: 
+    user: root
+    password: 
+    database: foo
+bar:
+  ssh: 
+    address: bar@192.168.0.101
+    port: 22
+  mysql: 
+    user: root
+    password: ""
+    database: bar

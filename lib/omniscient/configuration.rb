@@ -2,8 +2,13 @@ require 'yaml'
 
 module Omniscient
   class Configuration
-    def initialize( conf = {} )
-      @configuration = conf
+    
+    @PATH = File.expand_path('~/.omniscient_conf.yml')
+    
+    attr_accessor :PATH, :configuration
+    
+    def initialize(*args)
+      @configuration = true
     end
     
     def method_missing( name, *args, &block )
@@ -11,6 +16,19 @@ module Omniscient
         @attributes[name.to_sym]
       else
         nil
+      end
+    end
+    
+    def load_configuration
+      return false unless File.exist? @PATH
+      
+      config_file = File.new @PATH, 'r'
+      existing_configurations = YAML::load config_file.read
+      if existing_configurations.kind_of?(Hash) && existing_configurations.has_key?(alias_name)
+        @configurations = existing_configurations[alias_name]
+        true
+      else
+        false
       end
     end
     

@@ -31,7 +31,7 @@ module Omniscient
       end
       
       def request_configuration
-        @configurations.configuration @configurations.questions(:alias_name => @alias_name)
+        @configurations = Omniscient::Configuration::questions(:alias_name => @alias_name)
       end
       
       def help

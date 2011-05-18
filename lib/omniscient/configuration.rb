@@ -27,7 +27,7 @@ module Omniscient
       end
     end
     
-    def questions informations
+    def self.questions informations
       
       custom_alias = informations[:alias_name].nil? ? nil : informations[:alias_name]
 

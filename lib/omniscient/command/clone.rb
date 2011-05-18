@@ -6,20 +6,18 @@ require 'adapters/mysql'
 module Omniscient
   module Command
     class Clone < Omniscient::Command::Run
-
+      
+      attr_accessor :ssh, :scp, :mysql, :alias_name
+      
       def run
         @alias_name = Shell::Parser.get_arguments(@argv).first || ""
         
         (help; exit) if @alias_name.empty?
         
-        request_configuration unless has_conf @alias_name
-
-        database = Shell::Parser.get_option_value('d', @argv) || nil
-        @configurations['mysql']['database'] = database unless database.empty?
-        
-        @ssh = Omniscient::Ssh.new(@configurations['ssh'])
-        @scp = Omniscient::Scp.new(@configurations['ssh'])
-        @mysql = Omniscient::Adapter::MySQL.new(@configurations['mysql'])
+        request_configuration unless configurations_exist? @alias_name
+        load_configurations
+        set_custom_variables
+        instantiate_adapters
 
         # Dumps remotely
         command_to_issue = "#{@ssh.connect} '#{@mysql.dump}'"
@@ -41,28 +39,32 @@ module Omniscient
         Omniscient::Configuration::load alias_name
       end
       
-      def load_configuration_by_alias alias_name
-        return false unless alias_name
-        return false unless File.exist?(File.expand_path('~/.omniscient_conf.yml'))
-        
-        config_file = File.new(File.expand_path('~/.omniscient_conf.yml'), 'r')
-        existing_configurations = YAML::load(config_file.read)
-        if existing_configurations.kind_of?(Hash) && existing_configurations.has_key?(alias_name)
-          @configurations = existing_configurations[alias_name]
-          true
-        else
-          false
-        end
+      def set_custom_variables argv = false
+        database = Shell::Parser.get_option_value('d', (argv || @argv)) || nil
+        @configurations['mysql']['database'] = database unless database.empty?
+
+        address = Shell::Parser.get_option_value('host', (argv || @argv)) || nil
+        @configurations['ssh']['address'] = address unless address.empty?
+      end
+      
+      def instantiate_adapters
+        @ssh = Omniscient::Ssh.new @configurations['ssh']
+        @scp = Omniscient::Scp.new @configurations['ssh']
+        @mysql = Omniscient::Adapter::MySQL.new @configurations['mysql']
+      end
+      
+      def load_configurations alias_name = false
+        @configurations = Omniscient::Configuration.load(alias_name || @alias_name)
       end
         
       def help
         print "Usage:\n"
-        print "\s\somniscient push ALIAS_NAME [options]"
+        print "\s\somniscient clone ALIAS_NAME [options]"
         print "\n\n"
         print "Options:"
         print "\n"
-        print "\s\s-d\tSelect a different database"
-        print "\n"
+        print "\s\s-d\t\tSelect a different database\n"
+        print "\s\s--host\tSelect a different SSH address, e.g. foo@192.168.0.1\n"
       end
       
     end

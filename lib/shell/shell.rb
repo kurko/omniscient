@@ -93,7 +93,7 @@ module Shell
       @options
     end # get_options
     
-    def self.get_option_value option, argv = Array.new
+    def self.get_option_value option, argv = []
       next_item, option_value = false
       argv.each { |e|
         if next_item

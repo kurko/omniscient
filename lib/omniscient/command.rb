@@ -4,12 +4,15 @@ require "configuration"
 module Omniscient
 
   module Command
-
+    
     class Run
+
+      attr_accessor :argv, :configurations
+
       def initialize argv = ''
         @argv = argv
         
-        @configurations = Omniscient::Configuration.new
+        @configurations = Omniscient::Configuration.load
         
         unless (["h", "help"] & Shell::Parser.get_options(argv)).empty?
           help if self.respond_to?('help')

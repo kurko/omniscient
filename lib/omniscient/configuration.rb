@@ -62,10 +62,15 @@ module Omniscient
       end
 
       unless @configuration[custom_alias]['mysql'].has_key?('password')
-        system "stty -echo"
-        print "Database's password [leave it blank if none is needed]: "
-        mysql_password = Shell::Input.text
-        system "stty echo"
+        begin
+          system "stty -echo"
+          print "Database's password [leave it blank if none is needed]: "
+          mysql_password = Shell::Input.text
+          system "stty echo"
+        rescue NoMethodError, Interrupt
+            system "stty echo"
+            exit
+        end
         print "\n"
         @configuration[custom_alias]['mysql']['password'] = mysql_password.empty? ? '' : mysql_password
       end

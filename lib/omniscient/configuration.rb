@@ -4,25 +4,24 @@ module Omniscient
   class Configuration
     
     @PATH = File.expand_path('~/.omniscient_conf.yml')
+    @configuration = {}
     
-    attr_accessor :PATH, :configuration
-    
-    def initialize(*args)
-      @configuration = true
+    class << self
+      attr_accessor :PATH, :configuration
     end
     
-    def load_configuration alias_name = false
+    def self.load alias_name = false
       return false unless File.exist? @PATH
       
       config_file = File.new @PATH, 'r'
       existing_configurations = YAML::load config_file.read
       if existing_configurations.kind_of? Hash
-        @configurations = existing_configurations
+        @configuration = existing_configurations
         if alias_name
-          @configurations[alias_name.to_s]
-        else
-          @configurations
+          return @configuration[alias_name.to_s] unless @configuration[alias_name.to_s].nil?
+          return false
         end
+        @configuration
       else
         false
       end

@@ -1,4 +1,7 @@
 require 'yaml'
+require 'ssh'
+require 'scp'
+require 'adapters/mysql'
 
 module Omniscient
   module Command
@@ -9,17 +12,11 @@ module Omniscient
         
         (help; exit) if @alias_name.empty?
         
-        has_conf = load_configuration_by_alias(@alias_name)
-        unless has_conf
-          request_configuration
-        end
-        
+        request_configuration unless has_conf @alias_name
+
         database = Shell::Parser.get_option_value('d', @argv) || nil
         @configurations['mysql']['database'] = database unless database.empty?
         
-        require 'ssh'
-        require 'scp'
-        require 'adapters/mysql'
         @ssh = Omniscient::Ssh.new(@configurations['ssh'])
         @scp = Omniscient::Scp.new(@configurations['ssh'])
         @mysql = Omniscient::Adapter::MySQL.new(@configurations['mysql'])
@@ -39,7 +36,11 @@ module Omniscient
         puts "Running => #{command_to_issue}"
         exit unless system command_to_issue
       end
-   
+      
+      def configurations_exist? alias_name
+        Omniscient::Configuration::load alias_name
+      end
+      
       def load_configuration_by_alias alias_name
         return false unless alias_name
         return false unless File.exist?(File.expand_path('~/.omniscient_conf.yml'))

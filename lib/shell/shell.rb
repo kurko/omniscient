@@ -76,9 +76,10 @@ module Shell
       
     end # get_command
     
-    # get only options in ARGV (arguments starting with _ or __)
-    def self.get_options argv
-      @options = Array.new
+    # get only options in ARGV (arguments starting with - or --)
+    def self.get_options argv = []
+      return [] if argv.empty?
+      @options = []
       
       argv.each {
         |e|

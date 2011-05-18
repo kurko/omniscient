@@ -1,4 +1,5 @@
 require "version"
+require "configuration"
 
 module Omniscient
 
@@ -19,10 +20,10 @@ module Omniscient
           exit
         end
 
-        if( self.respond_to?('run') )
-          run
-        elsif( self.respond_to?('help') )
-          print "Inexistent command.\n"
+        if self.respond_to?('run')
+          run unless defined? TESTING
+        elsif self.respond_to?('help')
+          help
         end
       end
       
@@ -52,8 +53,7 @@ module Omniscient
       end
       
       def version
-        print "Version: "
-        print Omniscient::VERSION
+        print "Omniscient v" + Omniscient::VERSION
         print "\n"
       end
       

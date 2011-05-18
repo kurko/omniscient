@@ -11,22 +11,18 @@ module Omniscient
       @configuration = true
     end
     
-    def method_missing( name, *args, &block )
-      if args.empty? && block.nil? && @attributes.has_key?(name)
-        @attributes[name.to_sym]
-      else
-        nil
-      end
-    end
-    
-    def load_configuration
+    def load_configuration alias_name = false
       return false unless File.exist? @PATH
       
       config_file = File.new @PATH, 'r'
       existing_configurations = YAML::load config_file.read
-      if existing_configurations.kind_of?(Hash) && existing_configurations.has_key?(alias_name)
-        @configurations = existing_configurations[alias_name]
-        true
+      if existing_configurations.kind_of? Hash
+        @configurations = existing_configurations
+        if alias_name
+          @configurations[alias_name.to_s]
+        else
+          @configurations
+        end
       else
         false
       end

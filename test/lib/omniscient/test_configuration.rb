@@ -16,7 +16,15 @@ class ConfigurationTest < Test::Unit::TestCase
     @obj = Omniscient::Configuration.new :load => false
     @obj.PATH = File.expand_path("../../../resources/configurations/omniscient_conf.yml", __FILE__)
     conf = @obj.load_configuration
-    assert conf =~ /address: foo@192\.168\.0\.100/
+    assert conf.kind_of? Hash
+    assert conf["foo"]["ssh"]["address"] == "foo@192.168.0.100"
+    conf = @obj.load_configuration "foo"
+    assert conf.kind_of? Hash
+    assert conf["ssh"]["address"] == "foo@192.168.0.100"
+    conf = @obj.load_configuration :foo
+    assert conf.kind_of? Hash
+    assert conf["ssh"]["address"] == "foo@192.168.0.100"
+    
   end
 
 end
